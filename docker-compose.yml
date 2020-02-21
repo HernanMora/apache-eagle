@@ -1,0 +1,37 @@
+version: '3.3'
+
+services:
+
+  eagle-db:
+    image: mysql/mysql-server:5.7
+    container_name: eagle-db
+    hostname: eagle-db
+    networks: 
+      - docker-local
+    environment:
+      - MYSQL_DATABASE=eagle
+      - MYSQL_USER=eagle
+      - MYSQL_PASSWORD=Apple2000!
+      - MYSQL_ROOT_PASSWORD=Apple2000!
+
+  eagle:
+    image: apache-eagle
+    container_name: eagle
+    hostname: eagle
+    networks: 
+      - docker-local
+    environment: 
+      EAGLE_ZOOKEEPER_QUORUM: "zookeeper:2181"
+      EAGLE_KAFKA_TOPIC_NAME: audit_topic
+      EAGLE_KAFKA_REPLICATION_FACTOR: 1
+      EAGLE_KAFKA_PARTITIONS: 1
+      EAGLE_DB_USERNAME: eagle
+      EAGLE_DB_PASSWORD: Apple2000!
+      EAGLE_DB_DATABASE: eagle
+      EAGLE_DB_HOSTNAME: eagle-db
+      EAGLE_DB_PORT: 3306
+      STORM_ZOOKEEPER_SERVERS: "['zookeeper']"
+
+networks:
+  docker-local:
+    external: true
